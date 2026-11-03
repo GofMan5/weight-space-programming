@@ -1,36 +1,82 @@
 <div align="center">
 
-<br>
-
-**A SKILL FOR AGENTS WORKING INSIDE NEURAL NETWORKS**
-
 # Weight-Space Programming
 
-### Read the weights. Form a hypothesis. Test the change.
+**An agent skill for working directly with neural-network weights.**
 
-An evidence-first agent skill for inspecting neural-network checkpoints,<br>
-investigating behavior, and making **measured, reversible** weight edits.
+Inspect checkpoints. Investigate mechanisms. Test precise edits.
+Keep the original recoverable and let evidence decide what happens next.
 
-[Get started](#get-started) &nbsp;·&nbsp; [What it does](#what-it-does) &nbsp;·&nbsp; [Try the demo](#try-the-demo) &nbsp;·&nbsp; [Research](#research--credits)
+[![Agent Skills](https://img.shields.io/badge/Agent%20Skills-compatible-111827?style=flat-square)](https://agentskills.io/) [![License: MIT](https://img.shields.io/badge/license-MIT-22a06b?style=flat-square)](LICENSE) [![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-3776ab?style=flat-square)](#try-the-demo) [![GitHub stars](https://img.shields.io/github/stars/GofMan5/weight-space-programming?style=flat-square&color=da9d24)](https://github.com/GofMan5/weight-space-programming/stargazers)
 
-<br>
+[Install](#install) &nbsp; / &nbsp; [Capabilities](#capabilities) &nbsp; / &nbsp; [Workflow](#workflow) &nbsp; / &nbsp; [Demo](#try-the-demo) &nbsp; / &nbsp; [Research](#research--credits)
 
-`INSPECT` &nbsp; → &nbsp; `HYPOTHESIZE` &nbsp; → &nbsp; `EDIT A COPY` &nbsp; → &nbsp; `EVALUATE` &nbsp; → &nbsp; `RESTORE`
-
-<br>
 </div>
 
 ---
 
-## The idea
+```text
+  CHECKPOINT  →  HYPOTHESIS  →  CANDIDATE
+  map & save     test a cause   edit a copy
+                                  ↓
+                       EVALUATE & RESTORE
+```
 
-Model weights are not just files to train and load. They can also be examined as the parameters of a computation. This skill gives an AI agent a practical workflow for exploring that computation—and, when requested, testing a specific intervention without overwriting the original checkpoint.
+Neural-network weights encode a computation, not just a file to load. This skill gives an agent a disciplined way to inspect that computation and, when asked, investigate whether a particular intervention improves a model.
 
-It is inspired by [*Sparks of Weight-Space Programming*](https://rikiyat.github.io/blog/weight-space-programming/). The research results are early and model-specific; this repository provides an engineering workflow, **not a guarantee that an arbitrary model can be understood or repaired**.
+Inspired by [*Sparks of Weight-Space Programming*](https://rikiyat.github.io/blog/weight-space-programming/), it translates early, model-specific research into a practical workflow. It does **not** guarantee that an arbitrary model can be understood, repaired, or changed without side effects.
 
-> **A small edit is not automatically a safe edit.** The skill asks for a recoverable baseline, matched evaluations, regression checks, and a verified restore. If evidence is inconclusive, the baseline stays in place.
+> [!IMPORTANT]
+> **Small changes can have large effects.** Preserve the baseline, compare behavior under matched settings, check regressions, and verify restoration. If evidence is inconclusive, keep the baseline.
 
-## What it does
+## Install
+
+Install using the [Skills CLI](https://github.com/vercel-labs/skills):
+
+```bash
+npx skills add GofMan5/weight-space-programming
+```
+
+The CLI discovers `weight-space-programming` from this repository and guides installation for supported agents. Add `-g` for a user-level installation. For other agents, consult their skill installation instructions or provide the [`SKILL.md`](SKILL.md) folder directly. An agent also needs access to the checkpoint, architecture, and tools appropriate to the task.
+
+<details>
+<summary><b>Manual installation for Codex</b></summary>
+
+macOS / Linux:
+
+```sh
+mkdir -p "${CODEX_HOME:-$HOME/.codex}/skills"
+git clone https://github.com/GofMan5/weight-space-programming.git \
+  "${CODEX_HOME:-$HOME/.codex}/skills/weight-space-programming"
+```
+
+Windows / PowerShell:
+
+```powershell
+$CodexHome = if ($env:CODEX_HOME) { $env:CODEX_HOME } else { Join-Path $HOME '.codex' }
+New-Item -ItemType Directory -Force -Path (Join-Path $CodexHome 'skills') | Out-Null
+git clone https://github.com/GofMan5/weight-space-programming.git (Join-Path $CodexHome 'skills/weight-space-programming')
+```
+
+Clone into a new destination; if the skill is already installed, update it using the method that installed it. Restart your agent session if needed.
+
+</details>
+
+### Give it a task
+
+```text
+Use $weight-space-programming to inspect this local checkpoint. Do not edit it
+or run inference. Report the tensor inventory and distinguish observations
+from hypotheses.
+```
+
+More starting points:
+
+- **Investigate:** "Find plausible causes of repetition in this model and design tests to distinguish them."
+- **Edit:** "Test a targeted weight edit on a copy; compare behavior and verify that the original can be restored."
+- **Construct:** "Implement this specified computation in a small network by setting weights directly, then test the boundaries."
+
+## Capabilities
 
 | Mode | Question | Result |
 |:---|:---|:---|
@@ -42,43 +88,7 @@ It is inspired by [*Sparks of Weight-Space Programming*](https://rikiyat.github.
 
 The workflow separates observations from hypotheses. A read-only request stays read-only; behavioral claims require behavioral evidence. It does not silently train a model, deploy a candidate, or upload weights and data.
 
-## Get started
-
-Clone this repository into your agent's skills directory. For **Codex**:
-
-<details open>
-<summary><b>macOS / Linux</b></summary>
-
-```sh
-mkdir -p "${CODEX_HOME:-$HOME/.codex}/skills"
-git clone https://github.com/GofMan5/weight-space-programming.git \
-  "${CODEX_HOME:-$HOME/.codex}/skills/weight-space-programming"
-```
-
-</details>
-
-<details>
-<summary><b>Windows · PowerShell</b></summary>
-
-```powershell
-$CodexHome = if ($env:CODEX_HOME) { $env:CODEX_HOME } else { Join-Path $HOME '.codex' }
-New-Item -ItemType Directory -Force -Path (Join-Path $CodexHome 'skills') | Out-Null
-git clone https://github.com/GofMan5/weight-space-programming.git (Join-Path $CodexHome 'skills/weight-space-programming')
-```
-
-</details>
-
-Restart your agent session if needed, then ask:
-
-```text
-Use $weight-space-programming to inspect this local checkpoint. Do not edit it
-or run inference. Report the tensor inventory and distinguish observations
-from hypotheses.
-```
-
-The core [`SKILL.md`](SKILL.md) and its references are portable instructions. Other agents can use them if they support the Agent Skills layout or can be given the files directly; installation and invocation vary by agent. An agent still needs access to the actual checkpoint, architecture, and appropriate tools to perform the work.
-
-## From evidence to intervention
+## Workflow
 
 ```text
   01  BASELINE      Identify the model, runtime, input settings and hashes.

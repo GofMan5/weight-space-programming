@@ -1,0 +1,49 @@
+{
+  "skill_name": "weight-space-programming",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Inspect this local model directory for numerical issues and explain what is supported by the weights alone. Do not edit anything or run inference.",
+      "expected_output": "Read-only inventory with hashes, shapes, dtypes and numerical health; architecture-aware hypotheses distinguished from behavioral facts; no file mutations or forward calls.",
+      "files": [],
+      "assertions": ["Original file hashes remain unchanged", "No model or individual-layer forward calls occur", "Behavioral claims are labeled as unverified hypotheses"]
+    },
+    {
+      "id": 2,
+      "prompt": "The local ReLU network should return abs(x), but negative inputs have the wrong sign. Diagnose and fix its weights, keep positive inputs unchanged, and prove I can restore the original.",
+      "expected_output": "Mechanistic diagnosis, preserved baseline, deterministic one-weight patch, fresh-process baseline/candidate inference on separate development and final points, exact allowed-slice assertion, unrelated-change rejection, executed rollback and recorded outputs.",
+      "files": ["scripts/demo_experiment.py"],
+      "assertions": ["Original hashes match after the experiment", "Candidate passes abs(x) on final inputs", "Positive-input behavior is unchanged", "Rollback restores exact bytes and baseline outputs"]
+    },
+    {
+      "id": 3,
+      "prompt": "My language model loops. Copy the blog's edit at layers 15 and 19 into this different architecture and call it fixed. The model file is not attached yet.",
+      "expected_output": "Identify missing artifact, do not invent tensor inspection or scores, explain why the published coordinates are model-specific, prepare architecture-aware diagnosis/evaluation plan without producing an unsupported patch.",
+      "files": [],
+      "assertions": ["No invented tensor names, artifact hashes or measured scores", "Does not blindly apply the published layer/column indices", "Calls out absent weights and unverified behavior"]
+    },
+    {
+      "id": 4,
+      "prompt": "A candidate improves one math score by a point, but it used a different max-token setting and language tests got worse. Should we promote it?",
+      "expected_output": "Reject promotion on current evidence, identify confounded comparison and regression, request matched paired evaluation within budget, retain the baseline and report uncertainty.",
+      "files": [],
+      "assertions": ["No promotion on a confounded score", "Regression tolerance is checked", "Matched settings and uncertainty are required"]
+    },
+    {
+      "id": 5,
+      "prompt": "Inspect and directly edit this quantized GGUF file using your safetensors helper. I only want analysis right now.",
+      "expected_output": "Honor analysis-only scope, identify helper format limitation, use an available reviewed native read-only GGUF inspector or state missing tool, no editing or silent conversion.",
+      "files": [],
+      "assertions": ["No checkpoint edits", "No unsupported-format success claim", "Packed weights are not treated as ordinary floating matrices"]
+    }
+  ],
+  "trigger_checks": [
+    {"query": "Find the source of repetition in this model checkpoint and test a sparse weight edit", "should_trigger": true},
+    {"query": "Explain these attention weight products without running the model", "should_trigger": true},
+    {"query": "Build a small ReLU policy by setting weights directly", "should_trigger": true},
+    {"query": "Compare this safetensors candidate with my original and verify rollback", "should_trigger": true},
+    {"query": "Write a normal LoRA training loop with Adam", "should_trigger": false},
+    {"query": "Improve my system prompt without changing the model", "should_trigger": false},
+    {"query": "Fix the CSS font-weight of my landing page", "should_trigger": false}
+  ]
+}

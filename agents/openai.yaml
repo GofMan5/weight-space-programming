@@ -1,0 +1,4 @@
+interface:
+  display_name: "Weight-Space Programming"
+  short_description: "Inspect, edit and test weights with verified rollback"
+  default_prompt: "Use $weight-space-programming to inspect this checkpoint, investigate its failure, and test an isolated weight edit with regression checks and verified rollback."
